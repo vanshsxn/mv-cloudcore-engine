@@ -7,8 +7,7 @@ RUN apt-get update \
 WORKDIR /app
 COPY . .
 
-RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
-    && cmake --build build -j"$(nproc)"
+RUN g++ -std=c++17 -O2 -pthread src/*.cpp -o engine
 
 FROM ubuntu:24.04 AS runtime
 
