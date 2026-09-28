@@ -5,9 +5,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
 COPY . .
 
 RUN g++ -std=c++17 -O2 -pthread src/*.cpp -o engine
+
 
 FROM ubuntu:24.04 AS runtime
 
@@ -17,14 +19,10 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY --from=build /app/build/mv-cloudcore-engine /app/mv-cloudcore-engine
+COPY --from=build /app/engine .
 
-ENV ENGINE_CORES=8
-ENV ENGINE_MEMORY_MB=16384
-ENV ENGINE_WORKERS=4
-ENV ENGINE_POLICY=MLFQ
-ENV ENGINE_HTTP_THREADS=8
+ENV PORT=10000
 
-EXPOSE 9090
+EXPOSE 10000
 
-CMD ["/app/mv-cloudcore-engine"]
+CMD ["./engine"]
