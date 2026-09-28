@@ -8,7 +8,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN g++ -std=c++17 -O2 -pthread src/*.cpp -o engine
+RUN g++ -std=c++17 -O2 -pthread -Iinclude src/*.cpp -o engine
+
 
 FROM ubuntu:24.04 AS runtime
 
