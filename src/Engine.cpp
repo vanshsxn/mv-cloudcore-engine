@@ -1,14 +1,10 @@
 #include "Engine.h"
-
 #include <algorithm>
 #include <chrono>
 #include <sstream>
 #include <thread>
-
 #include "Logger.h"
-
 namespace mvcc {
-
 Engine::Engine(EngineConfig cfg)
     : cfg_(std::move(cfg)),
       memory_(cfg_.memoryMb),
@@ -35,9 +31,7 @@ Engine::Engine(EngineConfig cfg)
     mlfq_->setLookup(lookup);
     adaptive_->setLookup(lookup);
 }
-
 Engine::~Engine() { stop(); }
-
 Scheduler* Engine::activeScheduler() const {
     return policyName_ == "ADAPTIVE" ? static_cast<Scheduler*>(adaptive_.get())
                                      : static_cast<Scheduler*>(mlfq_.get());
@@ -52,14 +46,12 @@ void Engine::start() {
                                 std::to_string(cfg_.memoryMb) + " MB memory, " +
                                 std::to_string(cfg_.workers) + " workers, policy " + policyName_);
 }
-
 void Engine::stop() {
     if (!running_.exchange(false)) return;
     if (dispatcher_.joinable()) dispatcher_.join();
     pool_.shutdown();
     Logger::instance().info("engine", -1, "Engine stopped");
 }
-
 SubmitResult Engine::submit(Job job) {
     SubmitResult res;
     std::string why;
@@ -411,5 +403,4 @@ std::map<std::string, double> Engine::allTenantCredits() const {
     std::lock_guard<std::mutex> lock(creditsMutex_);
     return std::map<std::string, double>(credits_.begin(), credits_.end());
 }
-
-}  // namespace mvcc
+}  // namespace mvstudiosjapan ~vanshsxn :)
